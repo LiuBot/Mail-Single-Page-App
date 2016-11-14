@@ -47,9 +47,9 @@
 	const Router = __webpack_require__(1);
 	const Inbox = __webpack_require__(2);
 
-		let routes = {
-			inbox: Inbox
-		};
+	let routes = {
+		inbox: Inbox
+	};
 
 	document.addEventListener("DOMContentLoaded", () => {
 		let content = document.querySelector(".content");
@@ -111,19 +111,34 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	const MessageStore = __webpack_require__(3);
+
 
 	//We'll have separate modules (called COMPONENTS) that will be responsible 
 	//for returning a DOM Node to display
 	let Inbox = {
+		renderMessage(message){
+			let li = document.createElement('li');
+			li.className = "message";
+			li.innerHTML = `<span class="from">${message.from}</span>
+											<span class="subject">${message.subject}</span>
+											<span class="body">${message.body}</span>`
+			return li;
+		},
 		render: function(){
-			const ul = document.createElement('ul');
+			let ul = document.createElement('ul');
 			ul.className = "messages";  // Set the class name of the container to messages using the className 
-	// property. This puts our CSS styles onto the node.
-			ul.innerHTML = "An Inbox Message";
+			let inboxMessages = MessageStore.getInboxMessages();
+
+			inboxMessages.forEach(message => {
+		// property. This puts our CSS styles onto the node.
+				ul.appendChild(this.renderMessage(message));
+			});
 			return ul;
 		}
-	}
+	};
 
 
 
@@ -134,6 +149,53 @@
 
 
 	module.exports = Inbox;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	// Create a local variable in this file called messages. This variable 
+	// will store all of the e-mail messages for our application. Instead of 
+	// directly exporting messages itself, we are going to export a separate 
+	// MessageStore object that closes around messages. This way, code in 
+	// other modules will not be able to directly change messages; instead, 
+	// they will have to go through MessageStore, which will act as our API 
+	// for accessing messages.
+
+	// Format the messages so they have the following properties: to, from, 
+	// subject, and body
+
+	let messages = { 
+		sent:[ // these two properties will store na array of message for
+		// their particular folder
+		{to: "connorlmurphy@gmail.com", 
+		subject: "Where u at?", 
+		body: "Miss you"},
+		{to: "temmiechang@gmail.com", 
+		subject: "zzzz", 
+		body: "hoi1!!!"}
+		],
+
+		inbox: [
+		{from: "connorlmurphy@gmail.com", 
+		subject: "Tickets for hamilton!", 
+		body: "Can you buy them from me pretty plzzzzzz"},
+		{from: "temmiechang@gmail.com", 
+		subject: "Hoiii!?!?!", 
+		body: "hoOOOoOoooi!!!!"}
+		]
+	};
+
+	let MessageStore = {
+		getInboxMessages: ()=>{
+			return messages.inbox;
+			},
+		getSentMessages: ()=>{
+			messages.sent;
+			}
+	}
+
+	module.exports = MessageStore;
 
 /***/ }
 /******/ ]);

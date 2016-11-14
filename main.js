@@ -1,9 +1,9 @@
 const Router = require("./router");
 const Inbox = require("./inbox");
 
-	let routes = {
-		inbox: Inbox
-	};
+let routes = {
+	inbox: Inbox
+};
 
 document.addEventListener("DOMContentLoaded", () => {
 	let content = document.querySelector(".content");
