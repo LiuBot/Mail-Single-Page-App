@@ -1,14 +1,17 @@
 const Router = require("./router");
 const Inbox = require("./inbox");
+const Sent = require("./sent");
 
 let routes = {
-	inbox: Inbox
+	inbox: Inbox,
+	sent: Sent
 };
 
 document.addEventListener("DOMContentLoaded", () => {
 	let content = document.querySelector(".content");
 	router = new Router(content, routes);
 	router.start();
+	location.hash = "#inbox"; // 
 
 	let sidebarItems = Array.from(document.querySelectorAll(".sidebar-nav li"));
 	sidebarItems.forEach(sidebarItem => {

@@ -10,8 +10,7 @@
 // subject, and body
 
 let messages = { 
-	sent:[ // these two properties will store na array of message for
-	// their particular folder
+	sent:[
 	{to: "connorlmurphy@gmail.com", 
 	subject: "Where u at?", 
 	body: "Miss you"},
@@ -19,7 +18,6 @@ let messages = {
 	subject: "zzzz", 
 	body: "hoi1!!!"}
 	],
-
 	inbox: [
 	{from: "connorlmurphy@gmail.com", 
 	subject: "Tickets for hamilton!", 
@@ -31,11 +29,11 @@ let messages = {
 };
 
 let MessageStore = {
-	getInboxMessages: ()=>{
+	getInboxMessages: function(){
 		return messages.inbox;
 		},
-	getSentMessages: ()=>{
-		messages.sent;
+	getSentMessages: function(){
+		return messages.sent;
 		}
 }
 
