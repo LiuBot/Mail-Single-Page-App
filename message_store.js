@@ -1,13 +1,16 @@
-// Create a local variable in this file called messages. This variable 
-// will store all of the e-mail messages for our application. Instead of 
-// directly exporting messages itself, we are going to export a separate 
-// MessageStore object that closes around messages. This way, code in 
-// other modules will not be able to directly change messages; instead, 
-// they will have to go through MessageStore, which will act as our API 
-// for accessing messages.
 
-// Format the messages so they have the following properties: to, from, 
-// subject, and body
+const user = "sliu3@wellesley.edu";
+
+class Message{
+constructor (from = user, to= "", subject="", body="") {
+	this.from = from;
+	this.to = to;
+	this.subject = subject;
+	this.body = body;
+	}
+}
+
+let messageDraft = new Message();
 
 let messages = { 
 	sent:[
@@ -34,7 +37,17 @@ let MessageStore = {
 		},
 	getSentMessages: function(){
 		return messages.sent;
-		}
+		},
+	updateDraftField: function(field, value){
+		messageDraft[field] = value;
+	},
+	getMessageDraft(){
+		return messageDraft;
+	},
+	sendDraft: function(){
+		messages.sent.push(messageDraft);
+		messageDraft = new Message();
+	}
 }
 
 module.exports = MessageStore;

@@ -47,10 +47,12 @@
 	const Router = __webpack_require__(1);
 	const Inbox = __webpack_require__(2);
 	const Sent = __webpack_require__(4);
+	const Compose = __webpack_require__(5);
 
 	let routes = {
 		inbox: Inbox,
-		sent: Sent
+		sent: Sent,
+		compose: Compose
 	};
 
 	document.addEventListener("DOMContentLoaded", () => {
@@ -157,16 +159,19 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	// Create a local variable in this file called messages. This variable 
-	// will store all of the e-mail messages for our application. Instead of 
-	// directly exporting messages itself, we are going to export a separate 
-	// MessageStore object that closes around messages. This way, code in 
-	// other modules will not be able to directly change messages; instead, 
-	// they will have to go through MessageStore, which will act as our API 
-	// for accessing messages.
+	
+	const user = "sliu3@wellesley.edu";
 
-	// Format the messages so they have the following properties: to, from, 
-	// subject, and body
+	class Message{
+	constructor (from = user, to= "", subject="", body="") {
+		this.from = from;
+		this.to = to;
+		this.subject = subject;
+		this.body = body;
+		}
+	}
+
+	let messageDraft = new Message();
 
 	let messages = { 
 		sent:[
@@ -193,7 +198,17 @@
 			},
 		getSentMessages: function(){
 			return messages.sent;
-			}
+			},
+		updateDraftField: function(field, value){
+			messageDraft[field] = value;
+		},
+		getMessageDraft(){
+			return messageDraft;
+		},
+		sendDraft: function(){
+			messages.sent.push(messageDraft);
+			messageDraft = new Message();
+		}
 	}
 
 	module.exports = MessageStore;
@@ -250,6 +265,57 @@
 
 
 	module.exports = Sent;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const MessageStore = __webpack_require__(3);
+
+	let Compose = {
+		renderForm: function(){
+			let currDraft = MessageStore.getMessageDraft();
+
+			let formString = 
+			`<p class="new-message=header">New Message</p>
+				<form class="compose-form">
+				<input type="text" placeholder="Recipient" name="to" value="${currDraft.to}">		
+
+					<input type="text" placeholder="Subject" name="subject" value="${currDraft.subject}">
+
+				<textarea name="body" rows=20>${currDraft.body}</textarea>
+
+				<button 
+					type="submit" 
+					class="btn btn-primary submit-message">Send</button>								
+				</form>
+				`;
+			return formString;
+		},
+			render: function() {
+			let div = document.createElement('div');
+			div.className = "new-message";
+			div.innerHTML = this.renderForm();
+
+			div.addEventListener("change", (event) => {
+				let target = event.target; // this is the el that fired event
+				let fieldName = target.name;
+				let fieldValue = target.value;
+				MessageStore.updateDraftField(fieldName, fieldValue);
+			});
+
+			div.addEventListener("submit", (event) =>{
+				event.preventDefault();
+
+				MessageStore.sendDraft();
+				window.location.hash = 'inbox'; // so you return to #inbox once you've submitted
+			})
+			return div;
+		}
+	};
+
+
+	module.exports = Compose; 
 
 /***/ }
 /******/ ]);
