@@ -9,26 +9,24 @@ class Router {
 		this.render(); // calling this immediately so that if someone
 		// opens a link to a URL with a hash fragment, or if they refresh
 		// with a hash fragment, the router will still update the DOM.
-		window.addEventListener("hashchange", this.render.bind(this));
-		//This will make the Router update the DOM every time the 
-// hash fragment changes.
+		window.addEventListener("hashchange", this.render.bind(this))
 	}
 
-	activeRoute(){
-		let hash = window.location.hash.substring(1);
-		let component =  this.routes[hash]; 
-		return component;
+	activeRoute(){ // should now return the COMPONENT that matches the current route
+		// instead of just the name of the route 
+		let hashFrag = window.location.hash.substring(1);
+		return this.routes[hashFrag];
 	}
 
 	render(){ // this function will update the DOM by changing the content of this.node
-		this.node.innerHTML = "";
+		this.node.innerHTML = ""; // clear this.node in both cases 
 		let component = this.activeRoute(); // save in component variable
 
 		if (component){
-			//adds a node to the end of the list of children of a specified parent node. 
 			this.node.appendChild(component.render());
 		}
 	}
+
 }
 
 

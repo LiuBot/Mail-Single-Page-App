@@ -42,10 +42,20 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	
+	const Router = __webpack_require__(1);
+	const Inbox = __webpack_require__(2);
+
+		let routes = {
+			inbox: Inbox
+		};
+
 	document.addEventListener("DOMContentLoaded", () => {
+		let content = document.querySelector(".content");
+		router = new Router(content, routes);
+		router.start();
+
 		let sidebarItems = Array.from(document.querySelectorAll(".sidebar-nav li"));
 		sidebarItems.forEach(sidebarItem => {
 			sidebarItem.addEventListener("click", () => {
@@ -57,6 +67,73 @@
 	})
 
 
+
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	
+	class Router {
+		constructor(node, routes){
+			this.node = node;
+			this.routes = routes;
+		}
+
+		start(){
+			this.render(); // calling this immediately so that if someone
+			// opens a link to a URL with a hash fragment, or if they refresh
+			// with a hash fragment, the router will still update the DOM.
+			window.addEventListener("hashchange", this.render.bind(this))
+		}
+
+		activeRoute(){ // should now return the COMPONENT that matches the current route
+			// instead of just the name of the route 
+			let hashFrag = window.location.hash.substring(1);
+			return this.routes[hashFrag];
+		}
+
+		render(){ // this function will update the DOM by changing the content of this.node
+			this.node.innerHTML = ""; // clear this.node in both cases 
+			let component = this.activeRoute(); // save in component variable
+
+			if (component){
+				this.node.appendChild(component.render());
+			}
+		}
+
+	}
+
+
+
+	module.exports = Router;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	//We'll have separate modules (called COMPONENTS) that will be responsible 
+	//for returning a DOM Node to display
+	let Inbox = {
+		render: function(){
+			const ul = document.createElement('ul');
+			ul.className = "messages";  // Set the class name of the container to messages using the className 
+	// property. This puts our CSS styles onto the node.
+			ul.innerHTML = "An Inbox Message";
+			return ul;
+		}
+	}
+
+
+
+
+	// For now, set the innerHTML of the container to "An Inbox Message" so 
+	// we can test that the component works.
+	// Return the <ul> container.
+
+
+	module.exports = Inbox;
 
 /***/ }
 /******/ ]);
